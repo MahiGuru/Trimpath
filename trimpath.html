@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
+  <script src="template.js" type="text/javascript"></script>
+</head>
+
+<body>
+<textarea style="display:none" id="test1_jst">
+    Hello ${customer.first} ${customer.last}.<br/>
+    Your shopping cart has ${products.length} item(s):
+    <table>
+     <tr><td>Name</td>
+         <td>Description</td>
+         <td>Price</td>
+         <td>Quantity & Alert</td>
+         </tr>
+     {for p in products}
+         <tr><td>${p.name|capitalize}</td><td>${p.desc}</td>
+             <td>$${p.price}</td><td>${p.quantity} : ${p.alert|default:""|capitalize}</td>
+             </tr>
+     {forelse}
+         <tr><td colspan="4">No products in your cart.</tr>
+     {/for}
+    </table>
+    {if customer.level == "gold"}
+      We love you!  Please check out our Gold Customer specials!
+    {else}
+      Become a Gold Customer by buying more stuff here.
+    {/if}
+  </textarea>
+  <div id="out3" style="display:none">Hello ${customer.first} ${customer.last}</div>
+  <div id="out1">Coming soon...</div>
+  <div id="out2">Coming soon...</div>
+  <script language="javascript">
+  var myStr = "Hello ${customer.first} ${customer.last}, Welcome back!";
+
+    var data = {
+        products : [ { name: "mac", desc: "computer",     
+                       price: 1000, quantity: 100, alert:null },
+                     { name: "ipod", desc: "music player", 
+                       price:  200, quantity: 200, alert:"on sale now!" },
+                     { name: "cinema display", desc: "screen",       
+                       price:  800, quantity: 300, alert:"best deal!" } ],
+        customer : { first: "John", last: "Public", level: "gold" }
+    };
+	
+    var t = TrimPath.parseDOMTemplate("test1_jst");
+	var t2 = TrimPath.parseDOMTemplate("out3"); 
+	$("#out1").html(t2.process(data)+"<p>.............. Having Items in carts ......................</p>"+t.process(data));
+
+    var data2 = {
+        products : [],
+        customer : { first: "John", last: "Public", level: "gold" }
+    };
+    $("#out2").html("<p>Empty carts ..............................................</p>"+t.process(data2));
+  </script>
+  
+</body>
+</html>
